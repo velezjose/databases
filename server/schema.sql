@@ -1,9 +1,18 @@
+DROP DATABASE chat;
+
 CREATE DATABASE chat;
 
 USE chat;
 
 CREATE TABLE messages (
-  /* Describe your table here.*/
+  username VARCHAR(50),
+  messageText VARCHAR(280),
+  roomname VARCHAR(20)  
+);
+
+CREATE TABLE friendlist (
+  username VARCHAR(50),
+  friend VARCHAR(50)
 );
 
 /* Create other tables and define schemas for them here! */
