@@ -10,7 +10,6 @@ module.exports = {
           callback(error);
         } else {
           callback(null, results);
-          console.log('GET RESULTS: ', results);
         }
       })
     }, 
@@ -23,11 +22,9 @@ module.exports = {
       var queryStr = `insert into messages (user_id, messageText, roomname, createdAt) values (${user_id}, ${JSON.stringify(message)}, ${JSON.stringify(roomname)}, ${JSON.stringify(createdAt)})`;
       db.connection.query(queryStr, (error, results, fields) => {
         if (error) {
-          console.log('ERROR IN MODELS POST: ', error);
           callback(error);
         } else {
-          console.log('QUERY STRING MODELS POST: ', queryStr);
-          callback(null, results);
+          callback(null, JSON.stringify(results));
         }
        });
     } 
@@ -41,7 +38,6 @@ module.exports = {
           callback(error);
         } else {
           callback(null, results);
-          console.log('GET RESULTS: ', results);
         }
       })
     },
@@ -54,13 +50,13 @@ module.exports = {
         if (results.length === 0) {
           db.connection.query(queryStr, (error, results) => {
             if (error) {
-              console.log('ERROR IN USERS.POST db: ', error);
               callback(error);
             } else {
-              console.log('POST RESULTS: ', results);
               callback(null, results);
             }
           });
+        } else {
+          callback(null, username);
         }
       });
     }

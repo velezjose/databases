@@ -20,7 +20,7 @@ module.exports = {
           res.end();
         } else {
           res.writeHead(200, headers);
-          res.end(JSON.parse(results));
+          res.end(JSON.stringify(JSON.parse(JSON.stringify(results))));
         }
       })
     }, 
@@ -39,9 +39,7 @@ module.exports = {
           res.end(JSON.stringify(results));
         }
       });
-
     }
-
   },
 
   users: {
