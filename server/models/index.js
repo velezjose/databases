@@ -1,63 +1,59 @@
 var db = require('../db');
+var messages = require('../db');
+var users = require('../db');
+var Sequelize = require('sequelize');
+// console.log('DB EQUALS: ', db.models);
 
 module.exports = {
   messages: {
     // a function which produces all the messages
-    get: function (callback) {
-      db.connection.query('select * from messages', (error, results) => {
-        if (error) {
-          // throw new Error(error);
-          callback(error);
-        } else {
-          callback(null, results);
-        }
-      })
-    }, 
+    get: () => {
+      return new Promise((resolve, reject) => {
+        messages.findAll()
+          .then(messages => {
+            resolve(messages);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
 
-//select user_id from users where username = 'Valjean'
-// insert into messages (user_id, messageText, roomname, createdAt) values (${user_id}, '${message}', '${roomname}', '${createdAt}')
     // a function which can be used to insert a message into the database
-    post: function ({username, message, roomname}, createdAt, callback) {
-      let user_id = `(select user_id from users where username = ${JSON.stringify(username)})`
-      var queryStr = `insert into messages (user_id, messageText, roomname, createdAt) values (${user_id}, ${JSON.stringify(message)}, ${JSON.stringify(roomname)}, ${JSON.stringify(createdAt)})`;
-      db.connection.query(queryStr, (error, results, fields) => {
-        if (error) {
-          callback(error);
-        } else {
-          callback(null, JSON.stringify(results));
-        }
-       });
-    } 
+    post: ({username, message, roomname}, createdAt) => {
+      return new Promise((resolve, reject) => {
+        messages.create({username, message, roomname, createdAt})
+          .then(messages => { resolve(JSON.stringify(messages)); })
+          .catch(err => { reject(err); });
+      });
+    }
   },
 
   users: {
     // Ditto as above.
-    get: function (callback) {
-      db.connection.query('select username from users', (error, results) => {
-        if (error) {
-          callback(error);
-        } else {
-          callback(null, results);
-        }
-      })
+    get: () => {
+      return new Promise((resolve, reject) => {
+        users.findAll()
+          .then(users => {
+            resolve(users);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     },
     
-    post: function (username, callback) {
-      var searchStr = `select * from users where username=${JSON.stringify(username)}`;
-      var queryStr = `insert into users (username) values (${JSON.stringify(username)})`;
-
-      db.connection.query(searchStr, (error, results) => {
-        if (results.length === 0) {
-          db.connection.query(queryStr, (error, results) => {
-            if (error) {
-              callback(error);
-            } else {
-              callback(null, results);
-            }
+    post: (username) => {
+      return new Promise((resolve, reject) => {
+        users.findOrCreate({where: {'username': username}, defaults: {}})
+          .then((user, created) => { 
+            console.log('FIND OR CREATE: ', username);
+            resolve(username); 
+          })
+          .catch(err => { 
+            console.log('ERROR IN FOC: ', err); 
+            reject(err); 
           });
-        } else {
-          callback(null, username);
-        }
       });
     }
   }
