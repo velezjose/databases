@@ -1,15 +1,18 @@
 var db = require('../db');
-var messages = require('../db');
-var users = require('../db');
+// var messages = require('../db');
+// var users = require('../db');
 var Sequelize = require('sequelize');
-// console.log('DB EQUALS: ', db.models);
+
+
+// messages.sync();
+// users.sync();
 
 module.exports = {
   messages: {
     // a function which produces all the messages
     get: () => {
       return new Promise((resolve, reject) => {
-        messages.findAll()
+        db.db.messages.findAll()
           .then(messages => {
             resolve(messages);
           })
@@ -21,9 +24,10 @@ module.exports = {
 
     // a function which can be used to insert a message into the database
     post: ({username, message, roomname}, createdAt) => {
+      debugger;
       return new Promise((resolve, reject) => {
-        messages.create({username, message, roomname, createdAt})
-          .then(messages => { resolve(JSON.stringify(messages)); })
+        db.db.messages.create({username: username, messageText: message, roomname: roomname, createdAt: createdAt})
+          .then(messages => { debugger; resolve(JSON.stringify(messages)); })
           .catch(err => { reject(err); });
       });
     }
@@ -33,7 +37,7 @@ module.exports = {
     // Ditto as above.
     get: () => {
       return new Promise((resolve, reject) => {
-        users.findAll()
+        db.db.users.findAll()
           .then(users => {
             resolve(users);
           })
@@ -44,8 +48,9 @@ module.exports = {
     },
     
     post: (username) => {
+     // debugger;
       return new Promise((resolve, reject) => {
-        users.findOrCreate({where: {'username': username}, defaults: {}})
+        db.db.users.findOrCreate({where: {'username': username}, defaults: {}})
           .then((user, created) => { 
             console.log('FIND OR CREATE: ', username);
             resolve(username); 

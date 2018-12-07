@@ -28,11 +28,8 @@ var messages = db.define('messages', {
   },
   messageText: Sequelize.STRING,
   roomname: Sequelize.STRING,
-  createdAt: Sequelize.DATE(6)
+  createdAt: Sequelize.DATE
 });
-
-messages.sync();
-users.sync();
 
 db
   .authenticate('student', 'student')
@@ -43,7 +40,4 @@ db
     console.error('Unable to connect to the database:', err);
   });
 
-  exports.db = db;
-  exports.messages = messages;
-  exports.users = users;
-  
+module.exports.db = { users, messages };

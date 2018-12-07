@@ -1,4 +1,4 @@
-CREATE DATABASE chat;
+CREATE DATABASE IF NOT EXISTS chat;
 
 USE chat;
 
@@ -12,15 +12,10 @@ CREATE TABLE messages (
   messageText VARCHAR(280),
   roomname VARCHAR(20),
   createdAt DATETIME,
-  user_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(user_id)
+  user_id INT NOT NULL
+  /*FOREIGN KEY (user_id) REFERENCES users(user_id)*/
 );
 
-
-
-/*CREATE TABLE friendlist (
-
-)*/
 
 /* Create other tables and define schemas for them here! */
 
